@@ -31,18 +31,73 @@ var movies = [
   }
 ];
 
-var moviesElements = movies.map(function(movie) {
-  return React.createElement('li', {key: movie.id},
-      React.createElement('h2', {}, movie.title),
-      React.createElement('p', {}, movie.desc),
-	  React.createElement('img', {src: movie.img})
-    );
+var Movie = React.createClass ({
+  propTypes: {
+    movie: React.PropTypes.object.isRequired,
+  },
+
+  render: function() {
+    return (
+      React.createElement("li", {key: this.props.movie.id},
+      React.createElement(MovieTitle, {title: this.props.movie.title}),
+      React.createElement(MovieDescription, {desc: this.props.movie.desc}),
+      React.createElement(MovieImage, {image: this.props.movie.img})
+      )
+    )
+  },
 });
 
-var element =
-  React.createElement('div', {},
-    React.createElement('h1', {}, 'Lista filmów'),
-    React.createElement('ul', {}, moviesElements)
-  );
+var MovieTitle = React.createClass({
+	propTypes: {
+		title: React.PropTypes.string.isRequired,
+	},
+	
+	render: function() {
+		return (
+			React.createElement('h2', {}, this.props.title)
+		)
+	},
+});
+
+var MovieDescription = React.createClass({
+	propTypes: {
+		desc: React.PropTypes.string.isRequired,
+	},
+	
+	render: function() {
+		return (
+			React.createElement('p', {}, this.props.desc)
+		)
+	},
+});
+
+var MovieImage = React.createClass({
+	propTypes: {
+		image: React.PropTypes.string.isRequired,
+	},
+	
+	render: function() {
+		return (
+			React.createElement('img', {src: this.props.image})
+		)
+	},
+});	
+	
+var MovieList = React.createClass({
+  propTypes: {
+    list: React.PropTypes.array.isRequired,
+  },
+  render: function() {
+    var moviesElements = this.props.list.map(function(movie) {
+      return React.createElement(Movie, {key: movie.id, movie: movie});
+    });
+    return (React.createElement('div', {},
+		React.createElement('h1', {}, 'Lista filmów'),
+		React.createElement('ul', {}, moviesElements))
+	);
+}});
+
+var element = React.createElement(MovieList, {list: movies});
 
 ReactDOM.render(element, document.getElementById('app'));
+	
